@@ -101,29 +101,33 @@
                     
                     $.post("/searchCountry",{country: country} ,function(data, status){
                         $('#sample_1 tbody').empty();
-                        let html =  `<tr class="odd gradeX">
-                                            <td >
-                                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                                    <input type="checkbox" class="checkboxes" value="1" />
-                                                    <span></span>
-                                                </label>
-                                            </td>
-                                            <td>` + data.country_name ` </td>
-                                            <td>
-                                                ` + data.population + `
-                                            </td>
-                                            <td>
-                                                ` + data.world_share +`
+                        let htmlTable =  '<tr class="odd gradeX">' +
+                                            '<td >' +
+                                                '<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">' +
+                                                    '<input type="checkbox" class="checkboxes" value="1" />' +
+                                                    '<span></span>' +
+                                               '</label>' +
+                                            '</td>' +
+                                            '<td> '+ data.country_name + '</td> '+
+                                            '<td>'
+                                                 + convertNumber(data.population) + 
+                                            '</td>'+
+                                            '<td>'
+                                                 + data.world_share +
                                                 
-                                            </td>
-                                            <td class="center"> ` + data.ranking +` </td>
+                                            '</td>' +
+                                            '<td class="center">' + data.ranking + '</td>' +
                                             
-                                    </tr>`
-                                    $('#sample_1 tbody').append(html);
+                                    '</tr>'
+                                   
+                                    $('#sample_1 tbody').append(htmlTable);
                     });
                 });
                  
             })
+            function convertNumber(number){
+                return parseInt(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+            }
             function search_country() {
                
                 $.get("/allcountriesname", function(data, status){
