@@ -1,0 +1,142 @@
+  
+<%- include('layout/header') %>
+
+    <div class="page-container">
+        
+        <div class="page-content">
+            <!-- BEGIN PAGE HEAD-->
+
+            <ul class="page-breadcrumb breadcrumb">
+                <li>
+                    <a href="index.html">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+            </ul>
+            
+            
+            <div class="row">
+                
+                <div class="col-md-12">
+                    <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                    <div class="portlet light bordered">
+                        
+                        <div class="form-group">
+                            <div class="col-md-4"></div>
+                                
+                            
+                            <div class="col-md-4">
+                                <h5>Total country: <%= worldpopulation.total_countries %></h5>
+                                <h5>Total country: <%= worldpopulation.world_population %></h5>
+                                <div class="input-icon right">
+                                    <i class="fa fa-search" id="buttonSearch"></i>
+                                    <input type="text" class="form-control"  id="search" placeholder="Country name"> </div>
+                                <div class="form-control-focus"> </div>
+                            </div>
+                            <div class="col-md-4">
+                                
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
+                                <thead>
+                                    <tr>
+                                        <th >
+                                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" />
+                                                <span></span>
+                                            </label>
+                                        </th>
+                                        <th> Country name </th>
+                                        <th> Population </th>
+                                        <th> World share </th>
+                                        <th> Ranking </th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% data.forEach(function(item){%>   
+                                    <tr class="odd gradeX">
+                                            <td >
+                                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                    <input type="checkbox" class="checkboxes" value="1" />
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                            <td> <%= item.country_name %> </td>
+                                            <td>
+                                                <%= item.population %>  
+                                            </td>
+                                            <td>
+                                                <%= item.world_share %> 
+                                                
+                                            </td>
+                                            <td class="center"> <%= item.ranking %> </td>
+                                            
+                                    </tr>
+                                    <%}); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- END EXAMPLE TABLE PORTLET-->
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+<%- include('layout/footer') %>
+        <script>
+            search_country()
+            $(document).ready(function()
+            {
+                $('#clickmewow').click(function()
+                {
+                    $('#radio1003').attr('checked', 'checked');
+                });
+
+                $('#buttonSearch').click(function(){
+                   
+                    let country = $('#search').val()
+                    
+                    $.post("/searchCountry",{country: country} ,function(data, status){
+                        $('#sample_1 tbody').empty();
+                        let html =  `<tr class="odd gradeX">
+                                            <td >
+                                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                    <input type="checkbox" class="checkboxes" value="1" />
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                            <td>` + data.country_name ` </td>
+                                            <td>
+                                                ` + data.population + `
+                                            </td>
+                                            <td>
+                                                ` + data.world_share +`
+                                                
+                                            </td>
+                                            <td class="center"> ` + data.ranking +` </td>
+                                            
+                                    </tr>`
+                                    $('#sample_1 tbody').append(html);
+                    });
+                });
+                 
+            })
+            function search_country() {
+               
+                $.get("/allcountriesname", function(data, status){
+                    
+                    if(status == "success"){
+                        
+                        $("#search").autocomplete({
+                            source: data.body.countries
+                        });
+                    }
+                });
+            }
+        </script>
+    </body>
+
+</html>
